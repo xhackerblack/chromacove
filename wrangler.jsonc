@@ -1,0 +1,17 @@
+{
+  // Root Wrangler config for the ChromaCove Worker.
+  // On `vite build`, Nitro merges this file into the generated
+  // `.output/server/wrangler.json`, which is what actually gets deployed.
+  "name": "chromacove",
+  "compatibility_date": "2025-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    // Public Supabase values (safe to commit — the publishable key is
+    // designed for client-side use). Replace with your own project values.
+    "SUPABASE_URL": "https://your-project-id.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_your-key-here",
+    "VITE_SUPABASE_URL": "https://your-project-id.supabase.co",
+    "VITE_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_your-key-here"
+  }
+  // Secrets (never commit): wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+}
