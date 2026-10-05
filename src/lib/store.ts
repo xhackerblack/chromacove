@@ -12,25 +12,50 @@ const listeners = new Set<() => void>();
 function load() {
   if (loaded || typeof window === "undefined") return;
   loaded = true;
-  try { state = { ...empty, ...JSON.parse(localStorage.getItem(KEY) || "{}") }; } catch { /* ignore */ }
+  try {
+    state = { ...empty, ...JSON.parse(localStorage.getItem(KEY) || "{}") };
+  } catch {
+    /* ignore */
+  }
 }
 function set(next: State) {
   state = next;
   localStorage.setItem(KEY, JSON.stringify(state));
   listeners.forEach((l) => l());
 }
-const subscribe = (l: () => void) => { load(); listeners.add(l); l(); return () => listeners.delete(l); };
+const subscribe = (l: () => void) => {
+  load();
+  listeners.add(l);
+  l();
+  return () => listeners.delete(l);
+};
 
 export function useStore() {
-  return useSyncExternalStore(subscribe, () => { load(); return state; }, () => empty);
+  return useSyncExternalStore(
+    subscribe,
+    () => {
+      load();
+      return state;
+    },
+    () => empty,
+  );
 }
 
 export const actions = {
   add: (slug: string) => set({ ...state, cart: { ...state.cart, [slug]: 1 } }), // digital: qty 1
-  remove: (slug: string) => { const c = { ...state.cart }; delete c[slug]; set({ ...state, cart: c }); },
+  remove: (slug: string) => {
+    const c = { ...state.cart };
+    delete c[slug];
+    set({ ...state, cart: c });
+  },
   clear: () => set({ ...state, cart: {}, code: "" }),
   toggleWish: (slug: string) =>
-    set({ ...state, wishlist: state.wishlist.includes(slug) ? state.wishlist.filter((s) => s !== slug) : [...state.wishlist, slug] }),
+    set({
+      ...state,
+      wishlist: state.wishlist.includes(slug)
+        ? state.wishlist.filter((s) => s !== slug)
+        : [...state.wishlist, slug],
+    }),
   setCode: (code: string) => set({ ...state, code: code.toUpperCase() }),
 };
 
@@ -43,6 +68,13 @@ export function totals(s: State, products: Product[]) {
   const bundle = sorted.slice(0, freeCount).reduce((a, p) => a + p.price, 0);
   const pct = discountCodes[s.code] ?? 0;
   const discount = ((subtotal - bundle) * pct) / 100;
-  return { items, subtotal, bundle, pct, discount, total: Math.max(0, subtotal - bundle - discount) };
+  return {
+    items,
+    subtotal,
+    bundle,
+    pct,
+    discount,
+    total: Math.max(0, subtotal - bundle - discount),
+  };
 }
 export const money = (n: number) => `$${n.toFixed(2)}`;

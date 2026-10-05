@@ -8,7 +8,9 @@ export const productsQuery = queryOptions({
   queryFn: async (): Promise<Product[]> => {
     const { data, error } = await supabase
       .from("products")
-      .select("slug,name,audience,theme,age,difficulty,pages,price,bestseller,short,description,color,reviews(id,name,rating,text,created_at)")
+      .select(
+        "slug,name,audience,theme,age,difficulty,pages,price,bestseller,short,description,color,reviews(id,name,rating,text,created_at)",
+      )
       .eq("active", true)
       .order("created_at", { ascending: true });
     if (error) throw new Error(error.message);

@@ -6,7 +6,12 @@
 export type Audience = "adults" | "kids";
 export type Theme = "mandala" | "animals" | "flowers" | "fantasy" | "dinosaurs" | "alphabet";
 
-export interface Review { id?: string; name: string; rating: number; text: string }
+export interface Review {
+  id?: string;
+  name: string;
+  rating: number;
+  text: string;
+}
 export interface Product {
   slug: string;
   name: string;
@@ -27,7 +32,14 @@ const img = (color: string, label: string, i: number) =>
   `https://placehold.co/800x1000/${color}/2b2118/png?text=${encodeURIComponent(label + " · p" + i)}&font=raleway`;
 export const productImages = (p: Product) => [1, 2, 3, 4].map((i) => img(p.color, p.name, i));
 
-export const themes: Theme[] = ["mandala", "animals", "flowers", "fantasy", "dinosaurs", "alphabet"];
+export const themes: Theme[] = [
+  "mandala",
+  "animals",
+  "flowers",
+  "fantasy",
+  "dinosaurs",
+  "alphabet",
+];
 export const avgRating = (p: Product) =>
   p.reviews.length ? p.reviews.reduce((s, r) => s + r.rating, 0) / p.reviews.length : 0;
 
